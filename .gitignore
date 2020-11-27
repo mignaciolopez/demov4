@@ -1,3 +1,4 @@
 proj.win32/build
 
-
+proj.android/.idea
+cocos2d/cocos/platform/android/libcocos2dx/build/
