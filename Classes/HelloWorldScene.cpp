@@ -186,9 +186,9 @@ void HelloWorld::onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, coc
     for (auto touch : touches)
     {
         if (touch->getPreviousLocation() != touch->getLocation())
-            cocos2d::log("onTouchesMoved previous location is different than current location %d", touch->getID());
+            cocos2d::log("onTouchesMoved previous location is different than current location %d", touch->getID()); //this touch moved
         else
-            cocos2d::log("onTouchesMoved location is equal to current location %d", touch->getID());
+            cocos2d::log("onTouchesMoved previous location is equal to current location %d", touch->getID()); //this one didn't moved
     }
 }
 
