@@ -25,6 +25,8 @@
 #ifndef __HELLOWORLD_SCENE_H__
 #define __HELLOWORLD_SCENE_H__
 
+//#define ONE_TOUCH
+
 #include "cocos2d.h"
 
 class HelloWorld : public cocos2d::Scene
@@ -39,6 +41,23 @@ public:
     
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
+
+    //
+#ifdef ONE_TOUCH
+	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
+	void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);
+	void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
+	void onTouchCancelled(cocos2d::Touch* touch, cocos2d::Event* event);
+
+	cocos2d::EventListenerTouchOneByOne* m_touchListener;
+#else
+	void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
+	void onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
+	void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
+	void onTouchesCancelled(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
+
+	cocos2d::EventListenerTouchAllAtOnce* m_touchListener;
+#endif
 };
 
 #endif // __HELLOWORLD_SCENE_H__

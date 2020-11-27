@@ -114,6 +114,23 @@ bool HelloWorld::init()
         // add the sprite as a child to this layer
         this->addChild(sprite, 0);
     }
+
+#ifdef ONE_TOUCH
+	m_touchListener = EventListenerTouchOneByOne::create();
+	m_touchListener->onTouchBegan = CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
+	m_touchListener->onTouchMoved = CC_CALLBACK_2(HelloWorld::onTouchMoved, this);
+	m_touchListener->onTouchEnded = CC_CALLBACK_2(HelloWorld::onTouchEnded, this);
+	m_touchListener->onTouchCancelled = CC_CALLBACK_2(HelloWorld::onTouchCancelled, this);
+	getEventDispatcher()->addEventListenerWithSceneGraphPriority(m_touchListener, this);
+#else
+	m_touchListener = EventListenerTouchAllAtOnce::create();
+	m_touchListener->onTouchesBegan = CC_CALLBACK_2(HelloWorld::onTouchesBegan, this);
+	m_touchListener->onTouchesMoved = CC_CALLBACK_2(HelloWorld::onTouchesMoved, this);
+	m_touchListener->onTouchesEnded = CC_CALLBACK_2(HelloWorld::onTouchesEnded, this);
+	m_touchListener->onTouchesCancelled = CC_CALLBACK_2(HelloWorld::onTouchesCancelled, this);
+	getEventDispatcher()->addEventListenerWithSceneGraphPriority(m_touchListener, this);
+#endif
+
     return true;
 }
 
@@ -130,3 +147,61 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 
 
 }
+#ifdef ONE_TOUCH
+bool HelloWorld::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event)
+{
+    cocos2d::log("onTouchesBegan %d", touch->getID());
+
+    return true;
+}
+
+void HelloWorld::onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event)
+{
+	if (touch->getPreviousLocation() != touch->getLocation())
+		cocos2d::log("onTouchesMoved previous location is different than current location %d", touch->getID());
+    else
+        cocos2d::log("onTouchesMoved location is equal to current location %d", touch->getID());
+}
+
+void HelloWorld::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
+{
+    cocos2d::log("onTouchEnded %d", touch->getID());
+}
+
+void HelloWorld::onTouchCancelled(cocos2d::Touch* touch, cocos2d::Event* event)
+{
+    cocos2d::log("onTouchCancelled %d", touch->getID());
+}
+
+#else
+void HelloWorld::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
+{
+    for (auto touch : touches)
+        cocos2d::log("onTouchesBegan %d", touch->getID());
+}
+
+
+void HelloWorld::onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
+{
+    for (auto touch : touches)
+    {
+        if (touch->getPreviousLocation() != touch->getLocation())
+            cocos2d::log("onTouchesMoved previous location is different than current location %d", touch->getID());
+        else
+            cocos2d::log("onTouchesMoved location is equal to current location %d", touch->getID());
+    }
+}
+
+void HelloWorld::onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
+{
+    for (auto touch : touches)
+        cocos2d::log("onTouchEnded %d", touch->getID());
+}
+
+void HelloWorld::onTouchesCancelled(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event)
+{
+    for (auto touch : touches)
+        cocos2d::log("onTouchCancelled %d", touch->getID());
+}
+
+#endif
